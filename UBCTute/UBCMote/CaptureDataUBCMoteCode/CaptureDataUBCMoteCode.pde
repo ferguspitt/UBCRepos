@@ -6,7 +6,9 @@ PrintWriter output;
 Serial myPort;      // create the serial port variable
 String mystring=null;
 String header_string="Time Stamp, Noise Level, Humidity, Temperature (*C)";
-
+int slices_i=0; //used when we need to seperate the files so they don't get too long.
+int loopi=0;//used when we need to seperate the files so they don't get too long.
+int sliceLength=10; //3600 would be an hour (assuming a polling rate of 1sec aka 1000ms)
 
 void setup() {
   println(Serial.list());
@@ -15,27 +17,37 @@ void setup() {
   delay(1000);
   println("hello world");
   delay(1000);
-  output = createWriter("NoiseHumTempData.csv");
-  output.println(header_string);//
+
 }
 
 void draw(){
-  if ( myPort.available() > 0) 
-  {  // If data is available,
-  mystring = myPort.readStringUntil('\n');         // read it and store it in val
+  String results=compileData();
   
-  } 
-  if (mystring!=null)
-  {
-    println(mystring);
-    String[] values = split(mystring,",");
-    if(values.length==3)
-    {
-      String timeStamp=Integer.toString(month())+"/"+Integer.toString(day())+" "+Integer.toString(hour())+":"+Integer.toString(minute())+":"+Integer.toString(second())+",";
-      output.print(timeStamp+mystring);
-    }
-  } 
-  delay(1000);
+
+  
+  if(loopi==0){
+    slices_i++;
+    println(slices_i);
+    output=createWriter("NoiseHumTempData"+Integer.toString(slices_i)+".csv");
+    output.println(header_string);
+    if (results!=null){output.print(results);};
+  } else if (loopi<sliceLength*slices_i){
+    if (results!=null){output.print(results);} 
+  } else if(loopi==sliceLength*slices_i){
+    slices_i++;
+    println(slices_i);
+    output.flush(); //write and close the last file
+    output.close(); //write and close the last file
+    output=createWriter("NoiseHumTempData"+Integer.toString(slices_i)+".csv");
+    output.println(header_string);
+    if (results!=null){output.print(results);}
+  } else {
+    output.flush();
+    output.close();
+    exit();
+  };
+loopi++;
+delay(1000); 
 }
 
 void keyPressed() {
@@ -44,4 +56,25 @@ void keyPressed() {
   exit(); 
 }
 
+
+
+String compileData(){
+  String data=null;
+  if ( myPort.available() > 0) 
+    {  // If data is available,
+    mystring = myPort.readStringUntil('\n');         // read it and store it in val
+    
+    } 
+    if (mystring!=null)
+    {
+      println(mystring);
+      String[] values = split(mystring,",");
+      if(values.length==3)
+      {
+        String timeStamp=Integer.toString(month())+"/"+Integer.toString(day())+" "+Integer.toString(hour())+":"+Integer.toString(minute())+":"+Integer.toString(second())+",";
+        data=timeStamp+mystring;
+      }
+    } 
+  return data;
+}
 
