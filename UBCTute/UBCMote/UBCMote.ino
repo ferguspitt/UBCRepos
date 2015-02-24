@@ -70,8 +70,6 @@ void loop(){ //Arduino runs on loops. We'll just repeat everthing in here, until
   Serial.print(h);
   Serial.print(",");
   Serial.print(t);
-  Serial.print(",");
-
   Serial.print("\n");
   // Temp and humidity looped code ends.
 
