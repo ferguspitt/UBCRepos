@@ -5,10 +5,10 @@ import java.io.FileWriter;
 PrintWriter output; 
 Serial myPort;      // create the serial port variable
 String mystring=null;
-String header_string="Time Stamp, Noise Level, Humidity, Temperature (*C)";
+String header_string="DateTime,Mic,Humidity,Temp";
 int slices_i=0; //used when we need to seperate the files so they don't get too long.
 int loopi=0;//used when we need to seperate the files so they don't get too long.
-int sliceLength=10; //3600 would be an hour (assuming a polling rate of 1sec aka 1000ms)
+int sliceLength=3600; //3600 would be an hour (assuming a polling rate of 1sec aka 1000ms)
 
 void setup() {
   println(Serial.list());
