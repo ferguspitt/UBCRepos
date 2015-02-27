@@ -15,19 +15,21 @@ PrintWriter output5;
 PrintWriter output6;
 PrintWriter output7;
 PrintWriter output8;
+PrintWriter output9;
+PrintWriter output10;
 
 
 Serial myPort;      // create the serial port variable
 String header_string = "DateTime,Mote,Temp,Mic,RF,AQ,Motion";
 
-int sensor_limit=8;
+int sensor_limit=11;
 
 int lf = 10;    // Linefeed in ASCII
 
 String[] my_parse; //this is used in the parsing function at the bottom of this file.
 int slices_i=0; //used when we need to seperate the files so they don't get too long.
 int loopi=0;//used when we need to seperate the files so they don't get too long.
-int sliceLength=450; //3600/sensorlimit would be an hour (assuming a polling rate of 1sec aka 1000ms)
+int sliceLength=514; //3600/sensorlimit would be an hour (assuming a polling rate of 1sec aka 1000ms)
 
 
 void setup() {
@@ -41,7 +43,7 @@ void setup() {
   for (int sensor_id=1; sensor_id<sensor_limit; sensor_id=sensor_id+1){
     myPort.write(':');//set AQ to off (or on,  if you change the command two down to 8. 
       myPort.write((char)sensor_id);
-    myPort.write(9);//9 setS AQ to off (or on,  if you change the command to 8. 
+    myPort.write(8);//9 setS AQ to off (or on,  if you change the command to 8. 
       println(header_string);
       println(sensor_id);
   //output = createWriter("moteData.csv");//moving this down to the loop so I can have more than one file
@@ -75,7 +77,10 @@ void draw () {
       output7.println(header_string);
       output8=createWriter("8moteData"+Integer.toString(slices_i)+".csv");
       output8.println(header_string);
-      
+      output9=createWriter("9moteData"+Integer.toString(slices_i)+".csv");
+      output9.println(header_string);
+      output10=createWriter("10moteData"+Integer.toString(slices_i)+".csv");
+      output10.println(header_string);
       loopThroughSensors();
 
 
@@ -118,7 +123,15 @@ void draw () {
       output8.flush(); //write and close the last file
       output8.close(); //write and close the last file
       output8=createWriter("8moteData"+Integer.toString(slices_i)+".csv");
-      output8.println(header_string);    
+      output8.println(header_string);  
+      output9.flush(); //write and close the last file
+      output9.close(); //write and close the last file
+      output9=createWriter("9moteData"+Integer.toString(slices_i)+".csv");
+      output9.println(header_string);  
+      output10.flush(); //write and close the last file
+      output10.close(); //write and close the last file
+      output10=createWriter("9moteData"+Integer.toString(slices_i)+".csv");
+      output10.println(header_string);
       loopThroughSensors();
     } else {
       output1.flush();
@@ -135,14 +148,18 @@ void draw () {
       output6.close();
       output7.flush();
       output7.close();
-      output8.flush();
+      output8.flush(); //write and close the last file
       output8.close();
+      output9.flush(); //write and close the last file
+      output9.close();
+      output10.flush(); //write and close the last file
+      output10.close();
       
       exit();
     };
     loopi++;
 
-    delay(1000);  
+    //delay(1000);  
 
 
 }
@@ -164,6 +181,10 @@ void keyPressed() {
       output7.close();
       output8.flush();
       output8.close();
+      output9.flush();
+      output9.close();
+      output10.flush();
+      output10.close();
   exit(); 
 }
 
@@ -206,12 +227,12 @@ void loopThroughSensors(){
     String myReadOut=null; 
     myPort.write(':');
     myPort.write((char)sensor_id);
-    myPort.write(01);//note, this changes depending on AQ sensor is on or off. switch to "1" if AQ is off, or "2" if it's on.
+    myPort.write(02);//note, this changes depending on AQ sensor is on or off. switch to "1" if AQ is off, or "2" if it's on.
     mystring=myPort.readStringUntil(lf);
     print("Sensor ID: ");
     print(sensor_id);
     print("   :");
-    delay(1000);
+    
     if (mystring!=null){
       myReadOut=processString(sensor_id,mystring);
     };
@@ -247,10 +268,20 @@ void loopThroughSensors(){
       if (sensor_id==8){
         output8.print(myReadOut); //in here to take care of returned empty data. Might need to allow for dropped rows....come back later
         println(myReadOut);
+      };
+      if (sensor_id==9){
+        output9.print(myReadOut); //in here to take care of returned empty data. Might need to allow for dropped rows....come back later
+        println(myReadOut);
+      };
+      if (sensor_id==10){
+        output10.print(myReadOut); //in here to take care of returned empty data. Might need to allow for dropped rows....come back later
+        println(myReadOut);
       };  
+       
     };
+    delay(1000); 
   };
-        
+       
 }
 
 
