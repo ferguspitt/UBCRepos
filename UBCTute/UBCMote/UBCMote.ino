@@ -74,9 +74,9 @@ void loop(){ //Arduino runs on loops. We'll just repeat everthing in here, until
   // Temp and humidity looped code ends.
 
 
-  delay(1000); //hold it for a second (1000 milisecconds)
+  delay(1000); //hold it for a second (1000 miliseconds)
 
-}
+} // Always be closing.
 
 
 
