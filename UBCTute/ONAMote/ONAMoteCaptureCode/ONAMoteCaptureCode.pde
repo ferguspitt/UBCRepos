@@ -1,4 +1,5 @@
-
+// This code is be Fergus Pitt, writted primarily as a teaching tool for a seminar at the University of British Columbia Journalism School 
+// It shares some early DNA with KippKitt's code from: https://github.com/kippkitts/DataSensingLab/tree/master/ONA_Sensor_Mote
 
 
 // Pull in the serial port interface. This requires pre-installation of the correct USB->serial drivers.
@@ -19,14 +20,14 @@ PrintWriter output8;
 Serial myPort;      // create the serial port variable
 String header_string = "DateTime,Mote,Temp,Mic,RF,AQ,Motion";
 
-int sensor_limit=5;
+int sensor_limit=8;
 
 int lf = 10;    // Linefeed in ASCII
 
 String[] my_parse; //this is used in the parsing function at the bottom of this file.
 int slices_i=0; //used when we need to seperate the files so they don't get too long.
 int loopi=0;//used when we need to seperate the files so they don't get too long.
-int sliceLength=3; //3600/sensorlimit would be an hour (assuming a polling rate of 1sec aka 1000ms)
+int sliceLength=450; //3600/sensorlimit would be an hour (assuming a polling rate of 1sec aka 1000ms)
 
 
 void setup() {
@@ -254,10 +255,8 @@ void loopThroughSensors(){
 
 
 //function to parse numbers into  dbs, etc
-
 //function to handle outages
-//functions to handle many sensors
-//functions to periodically write data to file .
+
 
 
 
